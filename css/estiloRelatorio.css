@@ -1,0 +1,71 @@
+/* Estilo para a tabela do relatório */
+table.relatorio {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+table.relatorio thead {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table.relatorio th, table.relatorio td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table.relatorio th {
+    /* background-color: #4CAF50; */
+    background: linear-gradient(to left, #812b24, rgb(233, 189, 189));
+    color: white;
+    text-align: center;
+}
+
+table.relatorio tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table.relatorio tr:hover {
+    background-color: #ddd;
+}
+
+table.relatorio td {
+    text-align: center;
+}
+
+/* Estilo para o botão */
+button.gerar-relatorio {
+    /* background-color: #4CAF50; */
+
+    background: linear-gradient(to left, #812b24, rgb(233, 189, 189));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.gerar-relatorio:hover {
+    /* background-color: #45a049; */
+    background: linear-gradient(to left, #812b24, rgb(233, 189, 189));
+}
+
+/* Responsividade */
+@media screen and (max-width: 600px) {
+    table.relatorio, table.relatorio th, table.relatorio td {
+        width: 100%;
+        display: block;
+    }
+    
+    table.relatorio tr {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    table.relatorio th {
+        text-align: left;
+    }
+}
