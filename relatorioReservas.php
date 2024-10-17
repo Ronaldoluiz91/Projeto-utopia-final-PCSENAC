@@ -28,7 +28,7 @@
                 <th>Nome</th>
                 <th>WhatsApp</th>
                 <th>Data da Reserva</th>
-                <th>Mesa</th>
+                <th>Quantidade de Pessoas</th>
                 <th>Hora</th>
                 <th>Tipo de Reserva</th>
             </tr>

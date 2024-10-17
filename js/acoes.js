@@ -188,10 +188,10 @@ function enviarReserva() {
                 abreModal({
                     nome: nome,
                     whatsapp: whatsapp,
-                    descricaoTipoReserva: data.tipoReserva, // Supondo que essas informações venham do servidor CORRIGIR PAR DESCRICAO
-                    descricaoMesa: data.mesa, // Supondo que essas informações venham do servidor
+                    descricaoTipoReserva: data.tipoReserva,
+                    quantidade: data.capacidade, 
                     dataReserva: data.dataReserva,
-                    descricaoHora: data.hora // Supondo que essas informações venham do servidor
+                    descricaoHora: data.hora 
                 });
             } else {
                 alert(data.msg); // Exibe mensagem de erro
@@ -204,10 +204,10 @@ function abreModal(reserva) {
     // Preenchendo os campos do modal com os dados da reserva
     document.getElementById('reservaRelatorio').innerHTML = reserva.nome;
     document.getElementById('telRelatorio').innerHTML = reserva.whatsapp;
-    document.getElementById('tipoRelatorio').innerHTML = reserva.descricaoTipoReserva; // Use a descrição do tipo de reserva
-    document.getElementById('quantRelatorio').innerHTML = reserva.descricaoMesa; // Use a descrição da mesa
+    document.getElementById('tipoRelatorio').innerHTML = reserva.descricaoTipoReserva; 
+    document.getElementById('quantRelatorio').innerHTML = reserva.quantidade; 
     document.getElementById('dataRelatorio').innerHTML = reserva.dataReserva;
-    document.getElementById('horaRelatorio').innerHTML = reserva.descricaoHora; // Use a descrição do horário
+    document.getElementById('horaRelatorio').innerHTML = reserva.descricaoHora; 
     document.getElementById('status').innerText = "Reserva confirmada";
 
     // Exibir o modal

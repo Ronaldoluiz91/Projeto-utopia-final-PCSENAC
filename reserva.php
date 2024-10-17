@@ -87,13 +87,13 @@
                     <option value="">Selecione a quantidade de pessoas:</option>
                     <?php
                     try {
-                        $query = "SELECT idMesa, capacidade FROM tbl_mesa";
+                        $query = "SELECT idCapacidade, capacidade FROM tbl_capacidade";
                         $stmt = $conn->prepare($query);
                         $stmt->execute();
 
                         if ($stmt->rowCount() > 0) {
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo '<option value="' . $row['idMesa'] . '">' . htmlspecialchars($row['capacidade']) . '</option>';
+                                echo '<option value="' . $row['idCapacidade'] . '">' . htmlspecialchars($row['capacidade']) . '</option>';
                             }
                         } else {
                             echo '<option value="">Nenhum horario disponivel</option>';

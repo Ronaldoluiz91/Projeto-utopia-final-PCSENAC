@@ -9,46 +9,87 @@ $RESERVA = new RESERVA();
 $mtReserva = $_POST['mtReserva'];
 
 switch ($mtReserva) {
-   case 'Reservar':
-    // Obtém os dados enviados via POST
-    $nome = $_POST['nome'];
-    $whatsapp = $_POST['whatsapp'];
-    $tipoReserva = $_POST['tipoReserva'];
-    $quantidade = $_POST['quantidade'];
-    $dataReserva = $_POST['dataReserva'];
-    $hora = $_POST['hora'];
+    case 'Reservar':
+        // Obtém os dados enviados via POST
+        $nome = $_POST['nome'];
+        $whatsapp = $_POST['whatsapp'];
+        $tipoReserva = $_POST['tipoReserva'];
+        $quantidade = $_POST['quantidade'];
+        $dataReserva = $_POST['dataReserva'];
+        $hora = $_POST['hora']; // Aqui, assumimos que "hora" é a descrição
 
-    // Verifica se todos os campos estão preenchidos
-    if (empty($nome) || empty($whatsapp) || empty($tipoReserva) || empty($quantidade) || empty($dataReserva) || empty($hora)) {
-        // Retorna uma resposta de erro
-        $result = [
-            'status' => false,
-            'msg' => "Por favor, preencha todos os campos."
-        ];
-    } else {
-        // Verifica se a data já atingiu o limite de 3 reservas
-        $reservasExistentes = $RESERVA->contarReservasPorData($dataReserva);
-
-        if ($reservasExistentes >= 3) { 
+        // Verifica se todos os campos estão preenchidos
+        if (empty($nome) || empty($whatsapp) || empty($tipoReserva) || empty($quantidade) || empty($dataReserva) || empty($hora)) {
+            // Retorna uma resposta de erro
             $result = [
                 'status' => false,
-                'msg' => "Data indisponível."
+                'msg' => "Por favor, preencha todos os campos."
             ];
         } else {
-            // Define os valores no objeto RESERVA
-            $RESERVA->setNome($nome);
-            $RESERVA->setWhatsapp($whatsapp);
-            $RESERVA->setTipoReserva($tipoReserva);
-            $RESERVA->setQuantidade($quantidade);
-            $RESERVA->setDataReserva($dataReserva);
-            $RESERVA->setHora($hora);
+            // Verifica a quantidade total de pessoas na data
+            $pessoasExistentes = $RESERVA->contarPessoasPorData($dataReserva);
 
-            // Tenta cadastrar a reserva e captura o retorno
-            $result = $RESERVA->criarReserva();
+            if ($pessoasExistentes > 50) {
+                $result = [
+                    'status' => false,
+                    'msg' => "Data indisponível."
+                ];
+            } else {
+                // Verifica a capacidade para a hora específica 
+                $capacidadePorHora = $RESERVA->contarPessoasPorHora($dataReserva, $hora);
+
+                // Verifica se a hora já tem mais de 20 pessoas
+                if ($capacidadePorHora + $quantidade  > 20) {
+                    $result = [
+                        'status' => false,
+                        'msg' => "Limite de reservas para o horario excedido.",
+                        'capacidade'=> $capacidadePorHora + $quantidade
+                    ];
+                } else {
+                    // Define os valores no objeto RESERVA
+                    $RESERVA->setNome($nome);
+                    $RESERVA->setWhatsapp($whatsapp);
+                    $RESERVA->setTipoReserva($tipoReserva);
+                    $RESERVA->setQuantidade($quantidade);
+                    $RESERVA->setDataReserva($dataReserva);
+                    $RESERVA->setHora($hora);
+
+                   $result = [
+                        'status' => false,
+                        'msg' => "Limite de reservas para o horario excedido.",
+                        'capacidade'=> $capacidadePorHora
+                    ];
+
+                    // Tenta cadastrar a reserva e captura o retorno
+                    //$result = $RESERVA->criarReserva();
+                }
+            }
         }
-    }
-    break;
+        break;
 
+
+
+
+        //     $reservasExistentes = $RESERVA->contarReservasPorQuantidade($quantidade, $dataReserva);
+
+        //     if ($reservasExistentes = ($quantidade >= 20)) { 
+        //         $result = [
+        //             'status' => false,
+        //             'msg' => "Data indisponível."
+        //         ];
+        //     } else {
+        //         // Define os valores no objeto RESERVA
+        //         $RESERVA->setNome($nome);
+        //         $RESERVA->setWhatsapp($whatsapp);
+        //         $RESERVA->setTipoReserva($tipoReserva);
+        //         $RESERVA->setQuantidade($quantidade);
+        //         $RESERVA->setDataReserva($dataReserva);
+        //         $RESERVA->setHora($hora);
+
+        //         // Tenta cadastrar a reserva e captura o retorno
+        //         $result = $RESERVA->criarReserva();
+        //     }
+        // }
 
     case 'relatorio':
         $dataInicial = $_POST['dataInicial'];

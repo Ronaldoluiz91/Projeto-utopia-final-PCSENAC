@@ -46,36 +46,42 @@ class RESERVA
     }
 
 
-    // public function obterDatasIndisponiveis()
-    // {
-    //     $query = "SELECT dataReserva FROM tbl_reserva GROUP BY dataReserva HAVING COUNT(*) >= 50";
-    //     $stmt = $this->conn->prepare($query);
-    //     $stmt->execute();
-    //     return $stmt->fetchAll(PDO::FETCH_COLUMN);
-    // }
+    public function contarPessoasPorHora($dataReserva, $descricaoHora)
+    {
+        $query = "
+        SELECT SUM(c.capacidade) AS totalCapacidade
+        FROM tbl_reserva r
+        JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
+        JOIN tbl_hora h ON r.FK_idHoraReserva = h.idHora
+        WHERE r.dataReserva = :dataReserva AND h.descricao = :descricaoHora
+    ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':dataReserva', $dataReserva, PDO::PARAM_STR);
+        $stmt->bindParam(':descricaoHora', $descricaoHora, PDO::PARAM_STR);
+        $stmt->execute();
+        // Criar uma estrutura d erepetição para somar a quantidade já reservada e retornar para o controller
+        
+        return $stmt->fetchColumn() ?: 0;
+    }
 
 
-    // public function contarReservasPorData($dataReserva)
-    // {
-    //     $query = "SELECT COUNT(*) FROM tbl_reserva WHERE dataReserva = :dataReserva";
-    //     $stmt = $this->conn->prepare($query);
-    //     $stmt->bindParam(':dataReserva', $dataReserva);
-    //     $stmt->execute();
 
-    //     return $stmt->fetchColumn(); // Retorna o número de reservas
-    // }
+    public function contarPessoasPorData($dataReserva)
+    {
+        $query = "
+        SELECT SUM(c.capacidade) 
+        FROM tbl_reserva r
+        JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
+        WHERE r.dataReserva = :dataReserva
+    ";
 
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':dataReserva', $dataReserva, PDO::PARAM_STR);
+        $stmt->execute();
 
-public function contarReservasPorData($dataReserva)
-{
-    $query = "SELECT COUNT(*) FROM tbl_reserva WHERE dataReserva = :dataReserva";
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':dataReserva', $dataReserva);
-    $stmt->execute();
-
-    return $stmt->fetchColumn(); 
-}
-
+        return $stmt->fetchColumn() ?: 0;
+    }
 
 
     public function criarReserva()
@@ -83,21 +89,21 @@ public function contarReservasPorData($dataReserva)
         // Insere os dados da reserva no banco de dados
         $statusReserva = 1;
 
-        $query = "INSERT INTO tbl_reserva (nome, whatsapp, dataReserva, FK_idMesa, FK_idStatusReserva, FK_idHoraReserva, FK_idTipoReserva) 
-              VALUES (:nome, :whatsapp, :dataReserva, :mesaId, :statusReservaId, :horaId, :tipoReservaId)";
+        $query = "INSERT INTO tbl_reserva (nome, whatsapp, dataReserva, FK_idCapacidade, FK_idStatusReserva, FK_idHoraReserva, FK_idTipoReserva) 
+              VALUES (:nome, :whatsapp, :dataReserva, :capacidadeId, :statusReservaId, :horaId, :tipoReservaId)";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nome', $this->nome);
         $stmt->bindParam(':whatsapp', $this->whatsapp);
         $stmt->bindParam(':tipoReservaId', $this->tipoReserva);
-        $stmt->bindParam(':mesaId', $this->quantidade);
+        $stmt->bindParam(':capacidadeId', $this->quantidade);
         $stmt->bindParam(':dataReserva', $this->dataReserva);
         $stmt->bindParam(':horaId', $this->hora);
         $stmt->bindParam(':statusReservaId', $statusReserva);
 
         if ($stmt->execute()) {
             $tipoReservaDescricao = $this->getTipoReservaDescricao($this->tipoReserva);
-            $mesaDescricao = $this->getMesaDescricao($this->quantidade);
+            $capacidadeDescricao = $this->getCapacidadeDescricao($this->quantidade);
             $horaDescricao = $this->getHoraDescricao($this->hora);
             // $statusDescricao = $this->getStatusDescricao($this->$statusReserva);
 
@@ -106,7 +112,7 @@ public function contarReservasPorData($dataReserva)
                 'status' => true,
                 'msg' => "Reserva criada com sucesso",
                 'tipoReserva' => $tipoReservaDescricao,
-                'mesa' => $mesaDescricao,
+                'capacidade' => $capacidadeDescricao,
                 'hora' => $horaDescricao,
                 'dataReserva' => $this->dataReserva,
                 // 'status' => $statusDescricao
@@ -136,11 +142,11 @@ public function contarReservasPorData($dataReserva)
         return $stmt->fetchColumn();
     }
 
-    private function getMesaDescricao($mesaId)
+    private function getCapacidadeDescricao($capacidadeId)
     {
-        $query = "SELECT capacidade FROM tbl_mesa WHERE idMesa = :mesaId";
+        $query = "SELECT capacidade FROM tbl_capacidade WHERE idCapacidade = :capacidadeId";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':mesaId', $mesaId);
+        $stmt->bindParam(':capacidadeId', $capacidadeId);
         $stmt->execute();
         return $stmt->fetchColumn();
     }
@@ -169,7 +175,7 @@ public function contarReservasPorData($dataReserva)
                         h.descricao AS descricaoHora, 
                         t.descricao AS descricaoTipoReserva 
                       FROM tbl_reserva r
-                      JOIN tbl_mesa m ON r.FK_idMesa = m.idMesa
+                      JOIN tbl_capacidade m ON r.FK_idCapacidade = m.idCapacidade
                       JOIN tbl_hora h ON r.FK_idHoraReserva = h.idHora
                       JOIN tbl_tiporeserva t ON r.FK_idTipoReserva = t.idTipoReserva
                       WHERE r.dataReserva BETWEEN :dataInicial AND :dataFinal  ORDER BY r.dataReserva ASC";
