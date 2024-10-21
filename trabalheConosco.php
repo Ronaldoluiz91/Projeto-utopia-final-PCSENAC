@@ -31,53 +31,59 @@
             <span id="iconClose" class="material-symbols-outlined" onclick="clickMenu()">
                 close
             </span>
-            <a href="index.html" tabindex="1">Home</a>
+            <a href="index.php" tabindex="1">Home</a>
             <!--tabindex é utilizado para a acessibilidade-->
             <a href="cardapio.html" tabindex="2">Cardapio</a>
-            <a href="reserva.html" tabindex="3">Reserva</a>
-            <a href="contato.html" tabindex="4">Contato</a>
-            <a href="trabalheConosco.html" tabindex="5">Trabalhe Conosco</a>
+            <a href="reserva.php" tabindex="3">Reserva</a>
+            <a href="contato.php" tabindex="4">Contato</a>
+            <a href="trabalheConosco.php" tabindex="5">Trabalhe Conosco</a>
         </nav>
     </div>
 </header>
 <!-- oi -->
+
 <body>
     <div id="fundo">
-        
-            <div class="trabalhe">
-                <!-- <h3>Venha Trabalhar conosco</h3>
+
+        <div class="trabalhe">
+            <!-- <h3>Venha Trabalhar conosco</h3>
                 <p>Faça parte do nosso time Utopia</p>
                 <p>Preencha os campos abaixo.</p> -->
-            </div>
-            <form action="" id="form-trabalhe" method="post">
-                <h3>Venha Trabalhar conosco</h3>
-                <p>Faça parte do nosso time Utopia</p>
-                <p>Preencha os campos abaixo.</p>
-                <p>
-                    <label for="nome">Nome:</label>
-                    <input tabindex="5" required type="text" id="nomeTrabalhe" name="nome">
-                </p>
-                <p>
-                    <label for="telefone">Celular:</label>
-                    <input tabindex="6" required type="tel" id="telefoneTrabalhe" name="telefone">
-                </p>
-                <p>
-                    <label for="email">email:</label>
-                    <input tabindex="7" required type="email" id="email" name="email">
-                </p>
-                <p>
-                    <label for="cargo">Cargo/Função:</label>
-                    <input tabindex="8" required type="text" id="cargo" name="cargo">
-                </p>
-                <p>
-                    <label for="mensagem">Mensagem:</label>
-                    <textarea tabindex="9" name="mensagem" id="mensagemTrabalhe" cols="30" rows="6"></textarea>
-                </p>
-                <p>
-                    <button tabindex="10" id="enviar" name="enviarTrabalhe">Enviar</button>
-                </p>
-            </form>
-        
+        </div>
+        <form action="" id="form-trabalhe" method="post">
+            <h3>Venha Trabalhar conosco</h3>
+            <p>Faça parte do nosso time Utopia</p>
+            <p>Preencha os campos abaixo.</p>
+            <p>
+                <label for="nome">Nome:</label>
+                <input tabindex="5" required type="text" id="nomeTrabalhe" name="nome">
+            </p>
+            <p>
+                <label for="telefone">Celular:</label>
+                <input tabindex="6" required type="tel" id="telefoneTrabalhe" name="telefone">
+            </p>
+            <p>
+                <label for="email">email:</label>
+                <input tabindex="7" required type="email" id="email" name="email">
+            </p>
+            <p>
+                <label for="cargo">Cargo/Função:</label>
+                <input tabindex="8" required type="text" id="cargo" name="cargo">
+            </p>
+            <p>
+                <label for="mensagem">Fale sobre você:</label>
+                <textarea tabindex="9" name="mensagem" id="mensagemTrabalhe" cols="30" rows="6"></textarea>
+            </p>
+            <p>
+                <label for="file">Anexar Curriculo PDF:</label>
+                <input type="file" id="file" name="file" required>
+            </p>
+
+            <p>
+                <button tabindex="10" id="enviar" name="enviarTrabalhe">Enviar</button>
+            </p>
+        </form>
+
 
 
     </div>
@@ -125,7 +131,7 @@
 
     </footer>
 
-    
+
     <!-- <footer class="rodape">
         <div class="endereco">
             <div id="logo-rodape" class="footerColum">
@@ -167,7 +173,7 @@
 
     </footer> -->
 
-    
+
     <div class="assinatura">
         <p>Desenvolvido por <b>Ronaldo e Kennedy</b> Site acadêmico |
             Todos os direitos reservados |

@@ -652,7 +652,7 @@ button a {
     justify-content: center;
     margin: 0%;
     display: flex;
-    background-image: url("../imagens/Utopia\ 2\ oo.png");
+    background-image: url("../imagens/Utopia-2.png");
     padding: 9%;
 }
 
@@ -1509,9 +1509,9 @@ button a {
         height: 565PX; 
     }
 
-    #status {
+    /* #status {
         display: none;
-    }
+    } */
 
 
     #modal-relatorio {

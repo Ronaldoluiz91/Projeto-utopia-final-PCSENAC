@@ -60,3 +60,46 @@ document.getElementById('formRelatorioReservas').addEventListener('submit', func
     })
     .catch(error => console.error('Erro:', error));
 });
+
+
+
+//Relatorio de contatos
+
+document.getElementById('formRelatorioContatos').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita o envio padrão do formulário
+
+    const formData = new FormData(this);
+
+    fetch('http://localhost/Utopia-final/private/controller/Contato.controller.php?action=gerarRelatorio', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Para verificar a resposta completa
+        if (data.status) {
+            const contatos = data.contatos; 
+            const tabela = document.getElementById('tabelaContato');
+            tabela.innerHTML = ''; // Limpa o conteúdo existente da tabela
+
+            // Crie linhas para cada reserva
+            contatos.forEach(contato => {
+                const row = document.createElement('tr'); // Cria uma nova linha
+
+                // Adicione células com os dados da reserva
+                row.innerHTML = `
+                    <td>${contato.nome}</td>
+                    <td>${contato.celular}</td>
+                   
+                    <td>${contato.mensagem}</td>
+                `;
+                
+                tabela.appendChild(row); // Adiciona a linha à tabela
+            });
+        } else {
+            alert(data.msg);
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+});
+

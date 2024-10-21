@@ -26,24 +26,29 @@ switch ($mtReserva) {
                 'msg' => "Por favor, preencha todos os campos."
             ];
         } else {
-            // Verifica a quantidade total de pessoas na data
+
+
+
+            // Conta o número total de pessoas já existentes na data de reserva
             $pessoasExistentes = $RESERVA->contarPessoasPorData($dataReserva);
 
-            if ($pessoasExistentes > 50) {
+            //$pessoasExistentes['totalCapacidade'] >= 100 ||
+
+            if ($pessoasExistentes['tipoReservaDescricao'] == 'Evento (mais de 30 pessoas)') {
                 $result = [
                     'status' => false,
-                    'msg' => "Data indisponível."
+                    'msg' => "Data indisponível.",
                 ];
             } else {
-                // Verifica a capacidade para a hora específica 
+                // Verifica a capacidade para a hora específica
                 $capacidadePorHora = $RESERVA->contarPessoasPorHora($dataReserva, $hora);
 
-                // Verifica se a hora já tem mais de 20 pessoas
-                if ($capacidadePorHora + $quantidade  > 20) {
+                // Verifica se a soma da capacidade atual e a quantidade de novas reservas excedem 20
+                if ($capacidadePorHora + $quantidade > 20) {
                     $result = [
                         'status' => false,
-                        'msg' => "Limite de reservas para o horario excedido.",
-                        'capacidade'=> $capacidadePorHora + $quantidade
+                        'msg' => "Limite de reservas para o horário excedido.",
+                        'capacidade' => $capacidadePorHora + $quantidade
                     ];
                 } else {
                     // Define os valores no objeto RESERVA
@@ -54,19 +59,12 @@ switch ($mtReserva) {
                     $RESERVA->setDataReserva($dataReserva);
                     $RESERVA->setHora($hora);
 
-                   $result = [
-                        'status' => false,
-                        'msg' => "Limite de reservas para o horario excedido.",
-                        'capacidade'=> $capacidadePorHora
-                    ];
-
                     // Tenta cadastrar a reserva e captura o retorno
-                    //$result = $RESERVA->criarReserva();
+                    $result = $RESERVA->criarReserva();
                 }
             }
         }
         break;
-
 
 
 

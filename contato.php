@@ -36,12 +36,12 @@
                 <span id="iconClose" class="material-symbols-outlined" onclick="clickMenu()">
                     close
                 </span>
-                <a href="index.html" tabindex="1">Home</a>
+                <a href="index.php" tabindex="1">Home</a>
                 <!--tabindex é utilizado para a acessibilidade-->
                 <a href="cardapio.html" tabindex="2">Cardapio</a>
-                <a href="reserva.html" tabindex="3">Reserva</a>
-                <a href="contato.html" tabindex="4">Contato</a>
-                <a href="trabalheConosco.html" tabindex="5">Trabalhe Conosco</a>
+                <a href="reserva.php" tabindex="3">Reserva</a>
+                <a href="contato.php" tabindex="4">Contato</a>
+                <a href="trabalheConosco.php" tabindex="5">Trabalhe Conosco</a>
             </nav>
         </div>
     </header>
@@ -54,10 +54,6 @@
             <p> Deixe-nos uma mensagem e uma forma de contato para resposta.</p>
             <p>Em breve retornaremos</p>
 
-
-
-
-
             <form action="" id="form-contato" method="post">
                 <p>
                     <label for="nome">Nome:</label>
@@ -69,17 +65,38 @@
                 </p>
                 <label for="assunto">Assunto:</label>
                 <select name="assunto" id="assunto" required>
-                    <option value=""></option>
-                    <option value="elogios">Elogios</option>
-                    <option value="reclamacoes">Reclamações</option>
-                    <option value="outros">Outros</option>
+                    <option value="">Selecione o Assunto</option>
+                   <?php
+                    // Conectar ao banco de dados e buscar usuários
+                    try {
+                        require "private/config/db/conn.php";
+                        $query = "SELECT idAssunto, descricao FROM tbl_assunto";
+                        $stmt = $conn->prepare($query);
+                        $stmt->execute();
+
+                        if ($stmt->rowCount() > 0) {
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                echo '<option value="' . $row['idAssunto'] . '">' . htmlspecialchars($row['descricao']) . '</option>';
+                            }
+                        } else {
+                            echo '<option value="">Nenhum horario disponivel</option>';
+                        }
+                    } catch (PDOException $e) {
+                        echo "Erro: " . $e->getMessage();
+                    }
+                    ?>
                 </select>
                 <p>
                     <label for="mensagem">Mensagem:</label>
                     <textarea tabindex="7" name="mensagem" id="mensagem" cols="30" rows="6" required></textarea>
                 </p>
+
+                <input type="hidden" name="mtContato" id="mtContato" value="Contato">
+
+                <!-- <input type="hidden" name="data_criacao" value="<?php echo date('Y-m-d H:i:s'); ?>"> -->
+
                 <p>
-                <div tabindex="9" id="enviarContato" name="enviar" onclick="enviarFormulario()">ENVIAR</div>
+                <div tabindex="9" id="enviarContato" name="enviar" onclick="enviarContato()">ENVIAR</div>
                 </p>
             </form>
 
@@ -191,6 +208,24 @@
             Todos os direitos reservados |
             SENAC TITO &copy; 2024</p>
     </div>
+
+
+      <!-- Modal de preencha todos os campos -->
+        <div id="modalPreenchaCampos" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModalPreenchaCampos()">&times;</span>
+                <p>Preencha todos os campos!</p>
+            </div>
+        </div>
+
+
+         <!-- Modal de preencha todos os campos -->
+        <div id="modalEnviado" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModalEnviado()">&times;</span>
+                <p>Mensagem enviada com sucesso!</p>
+            </div>
+        </div>
 
     <script src="js/acoes.js"></script>
 </body>

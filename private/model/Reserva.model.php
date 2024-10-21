@@ -45,43 +45,58 @@ class RESERVA
         $this->hora = $hora;
     }
 
-
-    public function contarPessoasPorHora($dataReserva, $descricaoHora)
+    public function contarPessoasPorHora($dataReserva, $idHoraReserva)
     {
+
+        $queryDescricao = "SELECT descricao FROM tbl_hora WHERE idHora = :idHoraReserva";
+        $stmtDescricao = $this->conn->prepare($queryDescricao);
+        $stmtDescricao->bindParam(':idHoraReserva', $idHoraReserva, PDO::PARAM_INT);
+        $stmtDescricao->execute();
+
+        // descricao da hora
+        $descricaoHora = $stmtDescricao->fetchColumn();
+
+        // Verificar se a descricao foi encontrada
+        if ($descricaoHora === false) {
+            return 0;
+        }
+
         $query = "
-        SELECT SUM(c.capacidade) AS totalCapacidade
-        FROM tbl_reserva r
-        JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
-        JOIN tbl_hora h ON r.FK_idHoraReserva = h.idHora
-        WHERE r.dataReserva = :dataReserva AND h.descricao = :descricaoHora
-    ";
+            SELECT SUM(c.capacidade) AS totalCapacidade
+            FROM tbl_reserva r
+            JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
+            JOIN tbl_hora h ON r.FK_idHoraReserva = h.idHora
+            WHERE r.dataReserva = :dataReserva AND h.descricao = :descricaoHora
+        ";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':dataReserva', $dataReserva, PDO::PARAM_STR);
         $stmt->bindParam(':descricaoHora', $descricaoHora, PDO::PARAM_STR);
         $stmt->execute();
-        // Criar uma estrutura d erepetição para somar a quantidade já reservada e retornar para o controller
-        
+
         return $stmt->fetchColumn() ?: 0;
     }
-
-
 
     public function contarPessoasPorData($dataReserva)
     {
         $query = "
-        SELECT SUM(c.capacidade) 
-        FROM tbl_reserva r
-        JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
-        WHERE r.dataReserva = :dataReserva
-    ";
+            SELECT 
+                SUM(c.capacidade) AS totalCapacidade,
+                tr.descricao AS tipoReservaDescricao
+            FROM tbl_reserva r
+            JOIN tbl_capacidade c ON r.FK_idCapacidade = c.idCapacidade
+            JOIN tbl_tiporeserva tr ON r.FK_idTipoReserva = tr.idTipoReserva
+            WHERE r.dataReserva = :dataReserva
+        ";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':dataReserva', $dataReserva, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchColumn() ?: 0;
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['totalCapacidade' => 0, 'tipoReservaDescricao' => null];
     }
+
+
 
 
     public function criarReserva()

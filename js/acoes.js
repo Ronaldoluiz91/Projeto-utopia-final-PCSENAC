@@ -9,8 +9,7 @@ var btnOcultar = document.getElementById('iconClose') // icone fechar do menu
 btnmostrar.addEventListener('click', function () {
     if (menu.style.display === 'block') {
         menu.style.display = 'none';
-    }
-    else {
+    } else {
         menu.style.display = 'block';
     }
 
@@ -19,8 +18,7 @@ btnmostrar.addEventListener('click', function () {
 btnmostrar.addEventListener('click', function () {
     if (logo.style.display === 'none') {
         logo.style.display = 'block';
-    }
-    else {
+    } else {
         logo.style.display = 'none';
 
     }
@@ -174,9 +172,9 @@ function enviarReserva() {
     dados.append('hora', horario);
 
     fetch('private/controller/Reserva.controller.php', {
-        method: 'POST',
-        body: dados
-    })
+            method: 'POST',
+            body: dados
+        })
         .then(response => response.json())
         .then(data => {
             document.getElementById('loading').style.display = 'none';
@@ -189,9 +187,9 @@ function enviarReserva() {
                     nome: nome,
                     whatsapp: whatsapp,
                     descricaoTipoReserva: data.tipoReserva,
-                    quantidade: data.capacidade, 
+                    quantidade: data.capacidade,
                     dataReserva: data.dataReserva,
-                    descricaoHora: data.hora 
+                    descricaoHora: data.hora
                 });
             } else {
                 alert(data.msg); // Exibe mensagem de erro
@@ -204,10 +202,10 @@ function abreModal(reserva) {
     // Preenchendo os campos do modal com os dados da reserva
     document.getElementById('reservaRelatorio').innerHTML = reserva.nome;
     document.getElementById('telRelatorio').innerHTML = reserva.whatsapp;
-    document.getElementById('tipoRelatorio').innerHTML = reserva.descricaoTipoReserva; 
-    document.getElementById('quantRelatorio').innerHTML = reserva.quantidade; 
+    document.getElementById('tipoRelatorio').innerHTML = reserva.descricaoTipoReserva;
+    document.getElementById('quantRelatorio').innerHTML = reserva.quantidade;
     document.getElementById('dataRelatorio').innerHTML = reserva.dataReserva;
-    document.getElementById('horaRelatorio').innerHTML = reserva.descricaoHora; 
+    document.getElementById('horaRelatorio').innerHTML = reserva.descricaoHora;
     document.getElementById('status').innerText = "Reserva confirmada";
 
     // Exibir o modal
@@ -237,37 +235,98 @@ function fechaModalRelatorio() {
 
 
 
+//Função para enviar contato pro controller
+
+
+
+function mostrarEnviado() {
+    document.getElementById('modalEnviado').style.display = 'block';
+}
+
+function fecharModalEnviado() {
+    document.getElementById('modalEnviado').style.display = 'none';
+}
+
+
+
+function enviarContato() {
+    const nome = document.getElementById('nome').value;
+    const telefone = document.getElementById('telefone').value;
+    const assunto = document.getElementById('assunto').value;
+    const mensagem = document.getElementById('mensagem').value;
+
+    const mtContato = document.getElementById('mtContato').value;
+
+    // Verifica se todos os campos estão preenchidos
+    if (nome === "" || telefone === "" || assunto === "" || mtContato === "" || mensagem === '') {
+        mostrarModalPreenchaCampos();
+        return;
+    }
+
+    const dados = new FormData();
+    dados.append('mtContato', mtContato);
+    dados.append('nome', nome);
+    dados.append('telefone', telefone);
+    dados.append('assunto', assunto);
+    dados.append('mensagem', mensagem);
+
+
+fetch('private/controller/Contato.controller.php', {
+        method: 'POST',
+        body: dados
+    })
+    .then(response => {
+        console.log(response); // Verifique a resposta do servidor
+        return response.json();
+    })
+    .then(data => {
+        console.log(data); // Verifique os dados recebidos
+        if (data.status) {
+            // alert(data.msg);
+            mostrarEnviado();
+
+        } else {
+            alert(data.msg); // Exibe mensagem de erro
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+}
+
+
+
+
+
 // pagina contato
 
-function enviarFormulario() {
-    var nome = document.getElementById("nome").value;
-    var telefone = document.getElementById("telefone").value;
-    var assunto = document.getElementById("assunto").value;
-    var mensagem = document.getElementById("mensagem").value;
+// function enviarFormulario() {
+//     var nome = document.getElementById("nome").value;
+//     var telefone = document.getElementById("telefone").value;
+//     var assunto = document.getElementById("assunto").value;
+//     var mensagem = document.getElementById("mensagem").value;
 
-    if (nome && telefone && assunto && mensagem) {
-        mostrarModal('modal-enviado');
-        limparFormulario();
-    } else {
-        mostrarModal('modal-nao-preenchido');
-    }
-}
+//     if (nome && telefone && assunto && mensagem) {
+//         mostrarModal('modal-enviado');
+//         limparFormulario();
+//     } else {
+//         mostrarModal('modal-nao-preenchido');
+//     }
+// }
 
-function mostrarModal(id) {  //Esta função recebe um parâmetro id, que é o ID do modal que deve ser exibido. 
-    //Ela encontra o modal correspondente usando document.getElementById(id)
-    var modal = document.getElementById(id);
-    modal.style.display = "block";
-}
+// function mostrarModal(id) {  //Esta função recebe um parâmetro id, que é o ID do modal que deve ser exibido. 
+//     //Ela encontra o modal correspondente usando document.getElementById(id)
+//     var modal = document.getElementById(id);
+//     modal.style.display = "block";
+// }
 
-function fecharModal(id) { //esta função recebe um parâmetro id, que é o ID do modal que deve ser fechado.
-    // Ela encontra o modal correspondente usando document.getElementById(id)
-    var modal = document.getElementById(id);
-    modal.style.display = "none";
-}
+// function fecharModal(id) { //esta função recebe um parâmetro id, que é o ID do modal que deve ser fechado.
+//     // Ela encontra o modal correspondente usando document.getElementById(id)
+//     var modal = document.getElementById(id);
+//     modal.style.display = "none";
+// }
 
-function limparFormulario() {
-    document.getElementById("nome").value = "";
-    document.getElementById("telefone").value = "";
-    document.getElementById("assunto").value = "";
-    document.getElementById("mensagem").value = "";
-}
+// function limparFormulario() {
+//     document.getElementById("nome").value = "";
+//     document.getElementById("telefone").value = "";
+//     document.getElementById("assunto").value = "";
+//     document.getElementById("mensagem").value = "";
+// }

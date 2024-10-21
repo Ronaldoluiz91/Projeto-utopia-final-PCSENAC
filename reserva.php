@@ -36,12 +36,12 @@
                 <span id="iconClose" class="material-symbols-outlined" onclick="clickMenu()">
                     close
                 </span>
-                <a href="index.html" tabindex="1">Home</a>
+                <a href="index.php" tabindex="1">Home</a>
                 <!--tabindex é utilizado para a acessibilidade-->
                 <a href="cardapio.html" tabindex="2">Cardapio</a>
-                <a href="reserva.html" tabindex="3">Reserva</a>
-                <a href="contato.html" tabindex="4">Contato</a>
-                <a href="trabalheConosco.html" tabindex="5">Trabalhe Conosco</a>
+                <a href="reserva.php" tabindex="3">Reserva</a>
+                <a href="contato.php" tabindex="4">Contato</a>
+                <a href="trabalheConosco.php" tabindex="5">Trabalhe Conosco</a>
             </nav>
         </div>
     </header>
