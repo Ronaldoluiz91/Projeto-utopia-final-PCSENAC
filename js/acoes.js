@@ -171,29 +171,35 @@ function enviarReserva() {
     dados.append('dataReserva', data);
     dados.append('hora', horario);
 
+    document.getElementById('loading').style.display = 'block';
+
     fetch('private/controller/Reserva.controller.php', {
             method: 'POST',
             body: dados
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            if (data.status) {
 
-                // alert(data.msg);
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
 
-                // Se a reserva foi bem-sucedida, abre o modal com os dados da reserva
-                abreModal({
-                    nome: nome,
-                    whatsapp: whatsapp,
-                    descricaoTipoReserva: data.tipoReserva,
-                    quantidade: data.capacidade,
-                    dataReserva: data.dataReserva,
-                    descricaoHora: data.hora
-                });
-            } else {
-                alert(data.msg); // Exibe mensagem de erro
-            }
+                if (data.status) {
+
+                    // alert(data.msg);
+
+                    // Se a reserva foi bem-sucedida, abre o modal com os dados da reserva
+                    abreModal({
+                        nome: nome,
+                        whatsapp: whatsapp,
+                        descricaoTipoReserva: data.tipoReserva,
+                        quantidade: data.capacidade,
+                        dataReserva: data.dataReserva,
+                        descricaoHora: data.hora
+                    });
+                } else {
+                    alert(data.msg); // Exibe mensagem de erro
+                }
+            }, 5000);
         })
         .catch(error => console.error('Erro:', error));
 }
@@ -271,25 +277,25 @@ function enviarContato() {
     dados.append('mensagem', mensagem);
 
 
-fetch('private/controller/Contato.controller.php', {
-        method: 'POST',
-        body: dados
-    })
-    .then(response => {
-        console.log(response); // Verifique a resposta do servidor
-        return response.json();
-    })
-    .then(data => {
-        console.log(data); // Verifique os dados recebidos
-        if (data.status) {
-            // alert(data.msg);
-            mostrarEnviado();
+    fetch('private/controller/Contato.controller.php', {
+            method: 'POST',
+            body: dados
+        })
+        .then(response => {
+            console.log(response); // Verifique a resposta do servidor
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // Verifique os dados recebidos
+            if (data.status) {
+                // alert(data.msg);
+                mostrarEnviado();
 
-        } else {
-            alert(data.msg); // Exibe mensagem de erro
-        }
-    })
-    .catch(error => console.error('Erro:', error));
+            } else {
+                alert(data.msg); // Exibe mensagem de erro
+            }
+        })
+        .catch(error => console.error('Erro:', error));
 }
 
 
